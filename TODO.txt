@@ -1,0 +1,25 @@
+03JUL2015
+
+These are pretty immediate necessities.
+
+- Implement a file cache for loading files and storing TMemoryStreams
+- Implement progress feedback for decoding
+- Implement DOS version handling
+- Finish script decompiler
+- More resource types!
+
+
+
+These are near-term needs
+
+- Save/export functionality
+- Implement sub structure handling for NES/C64 bundles as well as new game files.
+- Expand V2 to handle V3 games since they are quite similar?
+- Port to FPC
+
+
+
+These are long-term needs
+
+- More SCUMM versions!
+- More SCUMM platforms!
