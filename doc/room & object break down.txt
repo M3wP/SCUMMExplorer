@@ -1,0 +1,45 @@
+room file
+
+0	word 		unk
+2	word		unk
+4	word		room width
+6	word		room height
+8	word		unk
+10	word		ptr room image 
+...
+
+20 	byte 		num objs in room
+21	byte		unk
+22	byte		num sounds in room
+23	byte		num scripts in room
+24	word		ptr exit script		(EXCD_len = READ_LE_UINT16(roomptr + 0x1A) - _EXCD_offs + _resourceHeaderSize {4};)
+26	word		ptr entry script	(ENCD_len = READ_LE_UINT16(roomptr) - _ENCD_offs + _resourceHeaderSize {4};)
+28	word 		ptr obim		* num objs
+	word 		ptr obcd 		* num objs 	(for old bundle, actual address is less by 2)
+	
+			sounds
+
+			scripts
+
+
+object code
+
+-2	word		unk
+0	word		unk		size - 1?
+2	word		unk		
+4	word		obj number
+6	byte		unk
+7	byte		obj x pos div 8
+8	byte		high bit	parent state div 8
+			and $7F		obj y pos div 8
+9	byte		obj width
+10	byte		obj parent
+11	byte		obj walk x div 8
+12	byte		and $1F		obj walk y div 8
+13	byte		and $F8		obj height
+			and $07		actor dir
+14	unk
+15	verb offs tbl	until fallback or $00 $00 ?
+	0	byte	$FF for fallback or verb/sentence number
+	1	byte	obcd offset to script
+n	verb scripts	

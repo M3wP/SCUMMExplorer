@@ -1,0 +1,11 @@
+#Game Variants
+#name	variant	prefTag	id	ver	subv	musicFlgs		feat	plat	guiOpts
+maniac	Apple II	 	scgManiac	scvUnk	0	[smfAppleIIGS]	[]	scpAppleIIGS	[sgoNoSpeech, sgoNoMIDI]
+maniac	C64	 	scgManiac	scvUnk	0	[smfC64]	[]	scpC64	[sgoNoSpeech, sgoNoMIDI]
+maniac	V1	v1	scgManiac	scv1	0	[smfPCSPK, smfPCJR]	[scfEncrypted]	scpPCDOS	[sgoNoSpeech, sgoNoMIDI]
+maniac	V1 Demo	v1	scgManiac	scv1	0	[smfPCSPK, smfPCJR]	[scfEncrypted, scfDemo]	scpPCDOS	[sgoNoSpeech, sgoNoMIDI]
+maniac	NES	 	scgManiac	scv1	0	[]	[]	scpNES	[sgoNoSpeech, sgoNoMIDI, sgoNoASPECT]
+maniac	V2	v2	scgManiac	scv2	0	[smfPCSPK, smfPCJR]	[scfEncrypted]	scpUnk	[sgoNoSpeech, sgoNoMIDI]
+maniac	V2 Demo	v2	scgManiac	scv2	0	[smfPCSPK, smfPCJR]	[scfEncrypted, scfDEMO]	scpPCDOS	[sgoNoSpeech, sgoNoMIDI]
+zak	V1	v1	scgZak	scv1	0	[smfPCSPK, smfPCJR]	[]	scpUnk	[sgoNoSpeech, sgoNoMIDI]
+zak	V2	v2	scgZak	scv2	0	[smfPCSPK, smfPCJR]	[]	scpUnk	[sgoNoSpeech, sgoNoMIDI]

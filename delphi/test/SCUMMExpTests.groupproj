@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9B65A676-ED1B-480D-9557-FF1FE1DD608F}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="CostumeReader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CostumeAnim.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ObjectReader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="RoomReader.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="CostumeReader">
+        <MSBuild Projects="CostumeReader.dproj"/>
+    </Target>
+    <Target Name="CostumeReader:Clean">
+        <MSBuild Projects="CostumeReader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CostumeReader:Make">
+        <MSBuild Projects="CostumeReader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CostumeAnim">
+        <MSBuild Projects="CostumeAnim.dproj"/>
+    </Target>
+    <Target Name="CostumeAnim:Clean">
+        <MSBuild Projects="CostumeAnim.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CostumeAnim:Make">
+        <MSBuild Projects="CostumeAnim.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ObjectReader">
+        <MSBuild Projects="ObjectReader.dproj"/>
+    </Target>
+    <Target Name="ObjectReader:Clean">
+        <MSBuild Projects="ObjectReader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ObjectReader:Make">
+        <MSBuild Projects="ObjectReader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RoomReader">
+        <MSBuild Projects="RoomReader.dproj"/>
+    </Target>
+    <Target Name="RoomReader:Clean">
+        <MSBuild Projects="RoomReader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RoomReader:Make">
+        <MSBuild Projects="RoomReader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="CostumeReader;CostumeAnim;ObjectReader;RoomReader"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="CostumeReader:Clean;CostumeAnim:Clean;ObjectReader:Clean;RoomReader:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="CostumeReader:Make;CostumeAnim:Make;ObjectReader:Make;RoomReader:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

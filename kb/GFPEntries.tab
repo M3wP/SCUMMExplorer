@@ -1,0 +1,5 @@
+#Game Filename Patterns
+#gameid	pattern	genMethod	language	platfrm	variant
+maniac	%2.2d.LFL	sfgRoomNum	sclUnk	scpUnk	 
+maniac	%2.2d.MAN	sfgRoomNum	sclUnk	scpUnk	V1 Demo
+zak	%2.2d.LFL	sfgRoomNum	sclUnk	scpUnk	0

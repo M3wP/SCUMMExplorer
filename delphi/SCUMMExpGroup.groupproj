@@ -1,0 +1,108 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D237C2F7-2CE6-4361-AC16-48BF837CDD12}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="SCUMMExpLog.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SCUMMExpKB.dproj">
+            <Dependencies>SCUMMExpLog.dproj</Dependencies>
+        </Projects>
+        <Projects Include="SCUMMExpCore.dproj">
+            <Dependencies>SCUMMExpKB.dproj;SCUMMExpLog.dproj</Dependencies>
+        </Projects>
+        <Projects Include="SCUMMExpScriptDecomp.dproj">
+            <Dependencies>SCUMMExpLog.dproj;SCUMMExpCore.dproj</Dependencies>
+        </Projects>
+        <Projects Include="SCUMMExpPlatAmiga.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SCUMMExpDecodeV2.dproj">
+            <Dependencies>SCUMMExpLog.dproj;SCUMMExpKB.dproj;SCUMMExpCore.dproj;SCUMMExpScriptDecomp.dproj;SCUMMExpPlatAmiga.dproj</Dependencies>
+        </Projects>
+        <Projects Include="SCUMMExplorer.dproj">
+            <Dependencies>SCUMMExpLog.dproj;SCUMMExpKB.dproj;SCUMMExpCore.dproj;SCUMMExpDecodeV2.dproj</Dependencies>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SCUMMExpLog">
+        <MSBuild Projects="SCUMMExpLog.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpLog:Clean">
+        <MSBuild Projects="SCUMMExpLog.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpLog:Make">
+        <MSBuild Projects="SCUMMExpLog.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExpKB" DependsOnTargets="SCUMMExpLog">
+        <MSBuild Projects="SCUMMExpKB.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpKB:Clean" DependsOnTargets="SCUMMExpLog:Clean">
+        <MSBuild Projects="SCUMMExpKB.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpKB:Make" DependsOnTargets="SCUMMExpLog:Make">
+        <MSBuild Projects="SCUMMExpKB.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExpCore" DependsOnTargets="SCUMMExpKB;SCUMMExpLog">
+        <MSBuild Projects="SCUMMExpCore.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpCore:Clean" DependsOnTargets="SCUMMExpKB:Clean;SCUMMExpLog:Clean">
+        <MSBuild Projects="SCUMMExpCore.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpCore:Make" DependsOnTargets="SCUMMExpKB:Make;SCUMMExpLog:Make">
+        <MSBuild Projects="SCUMMExpCore.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExpScriptDecomp" DependsOnTargets="SCUMMExpLog;SCUMMExpCore">
+        <MSBuild Projects="SCUMMExpScriptDecomp.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpScriptDecomp:Clean" DependsOnTargets="SCUMMExpLog:Clean;SCUMMExpCore:Clean">
+        <MSBuild Projects="SCUMMExpScriptDecomp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpScriptDecomp:Make" DependsOnTargets="SCUMMExpLog:Make;SCUMMExpCore:Make">
+        <MSBuild Projects="SCUMMExpScriptDecomp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExpPlatAmiga">
+        <MSBuild Projects="SCUMMExpPlatAmiga.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpPlatAmiga:Clean">
+        <MSBuild Projects="SCUMMExpPlatAmiga.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpPlatAmiga:Make">
+        <MSBuild Projects="SCUMMExpPlatAmiga.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExpDecodeV2" DependsOnTargets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpScriptDecomp;SCUMMExpPlatAmiga">
+        <MSBuild Projects="SCUMMExpDecodeV2.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpDecodeV2:Clean" DependsOnTargets="SCUMMExpLog:Clean;SCUMMExpKB:Clean;SCUMMExpCore:Clean;SCUMMExpScriptDecomp:Clean;SCUMMExpPlatAmiga:Clean">
+        <MSBuild Projects="SCUMMExpDecodeV2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpDecodeV2:Make" DependsOnTargets="SCUMMExpLog:Make;SCUMMExpKB:Make;SCUMMExpCore:Make;SCUMMExpScriptDecomp:Make;SCUMMExpPlatAmiga:Make">
+        <MSBuild Projects="SCUMMExpDecodeV2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SCUMMExplorer" DependsOnTargets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpDecodeV2">
+        <MSBuild Projects="SCUMMExplorer.dproj"/>
+    </Target>
+    <Target Name="SCUMMExplorer:Clean" DependsOnTargets="SCUMMExpLog:Clean;SCUMMExpKB:Clean;SCUMMExpCore:Clean;SCUMMExpDecodeV2:Clean">
+        <MSBuild Projects="SCUMMExplorer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExplorer:Make" DependsOnTargets="SCUMMExpLog:Make;SCUMMExpKB:Make;SCUMMExpCore:Make;SCUMMExpDecodeV2:Make">
+        <MSBuild Projects="SCUMMExplorer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpScriptDecomp;SCUMMExpPlatAmiga;SCUMMExpDecodeV2;SCUMMExplorer"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SCUMMExpLog:Clean;SCUMMExpKB:Clean;SCUMMExpCore:Clean;SCUMMExpScriptDecomp:Clean;SCUMMExpPlatAmiga:Clean;SCUMMExpDecodeV2:Clean;SCUMMExplorer:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SCUMMExpLog:Make;SCUMMExpKB:Make;SCUMMExpCore:Make;SCUMMExpScriptDecomp:Make;SCUMMExpPlatAmiga:Make;SCUMMExpDecodeV2:Make;SCUMMExplorer:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
