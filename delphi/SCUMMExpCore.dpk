@@ -41,6 +41,7 @@ contains
   SPUTMTypes in '..\src\SPUTMTypes.pas',
   SPUTMStrs in '..\src\SPUTMStrs.pas',
   SCUMMConsts in '..\src\SCUMMConsts.pas',
-  FrameSCUMMExpCustomViewer in '..\src\FrameSCUMMExpCustomViewer.pas' {SCUMMExpCustomViewerFrame: TFrame};
+  FrameSCUMMExpCustomViewer in '..\src\FrameSCUMMExpCustomViewer.pas' {SCUMMExpCustomViewerFrame: TFrame},
+  FormSCUMMExpSplash in '..\src\FormSCUMMExpSplash.pas' {SCUMMExpSplashForm};
 
 end.

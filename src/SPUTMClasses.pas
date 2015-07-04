@@ -4,7 +4,8 @@ interface
 
 uses
 	TypInfo, System.Generics.Collections, Contnrs, Classes,
-	SCUMMKBClasses, SCUMMTypes, SCUMMClasses, SPUTMTypes, FrameSCUMMExpCustomViewer;
+	SCUMMKBClasses, SCUMMTypes, SCUMMClasses, SPUTMTypes, SPUTMStrs,
+	FrameSCUMMExpCustomViewer;
 
 
 type
@@ -300,6 +301,14 @@ type
 		function  IsThisMatch: Boolean; override;
 	end;
 
+
+	procedure SCUMMExpProgressBegin(const AMax: Integer;
+			const AMin: Integer = 0; const AProgress: Integer = 0;
+			const ADetail: string = LIT_SCUMMEXP_PROGRS_DEFDETAL);
+	procedure SCUMMExpProgressEnd;
+	procedure SCUMMExpProgressUpdate(const ALabel: string; const AProgress: Integer);
+
+
 var
 	SCUMMExpGames: TSCUMMExpGames;
 	SCUMMExpDecodeReflector: TSCUMMExpDecodeReflector;
@@ -310,7 +319,81 @@ var
 implementation
 
 uses
-	SysUtils, Vcl.Forms, SCUMMLogTypes, SPUTMStrs;
+	SysUtils, Vcl.Forms, Vcl.ComCtrls, SCUMMLogTypes, FormSCUMMExpSplash;
+
+
+var
+	prgDialog: TSCUMMExpSplashForm = nil;
+
+
+procedure SCUMMExpProgressBegin(const AMax, AMin, AProgress: Integer;
+		const ADetail: string);
+	begin
+	if  not Assigned(prgDialog) then
+		begin
+		prgDialog:= TSCUMMExpSplashForm.Create(Application.MainForm);
+
+		prgDialog.lblDetail.Caption:= ADetail;
+		prgDialog.prgbrProgress.Max:= AMax;
+		prgDialog.prgbrProgress.Min:= AMin;
+
+		if  AProgress = -1 then
+			begin
+			prgDialog.prgbrProgress.Style:= pbstMarquee;
+			prgDialog.prgbrProgress.Position:= 0;
+			end
+		else
+			begin
+			prgDialog.prgbrProgress.Style:= pbstNormal;
+			prgDialog.prgbrProgress.Position:= AProgress;
+			end;
+
+		prgDialog.lblProgress.Caption:= '';
+		prgDialog.Position:= poMainFormCenter;
+		prgDialog.Show;
+
+		Application.ProcessMessages;
+		end;
+	end;
+
+procedure SCUMMExpProgressEnd;
+	begin
+	if  Assigned(prgDialog) then
+		begin
+		prgDialog.Hide;
+		prgDialog.Release;
+		prgDialog:= nil;
+
+		Application.ProcessMessages;
+		end;
+	end;
+
+procedure SCUMMExpProgressUpdate(const ALabel: string; const AProgress: Integer);
+	begin
+	if  Assigned(prgDialog) then
+		begin
+		prgDialog.lblProgress.Caption:= ALabel;
+
+		if  AProgress = -1 then
+			begin
+			if  prgDialog.prgbrProgress.Style <> pbstMarquee then
+				begin
+				prgDialog.prgbrProgress.Style:= pbstMarquee;
+				prgDialog.prgbrProgress.Position:= 0;
+				end;
+			end
+		else
+			begin
+			if  prgDialog.prgbrProgress.Style <> pbstNormal then
+				prgDialog.prgbrProgress.Style:= pbstNormal;
+
+			prgDialog.prgbrProgress.Position:= AProgress;
+			end;
+
+		Application.ProcessMessages;
+		end;
+	end;
+
 
 { TSCUMMExpEnumCache.TSCUMMExpGlobIdTNode }
 

@@ -11,6 +11,8 @@ procedure DrawCostumeFrame(ASource: TMemoryStream; ACX, ACY: Integer;
 
 procedure DecodeRoomImage(AData: TMemoryStream; AWidth, AHeight: Word;
 		out ADest: TPNGImage);
+procedure DecodeObjectImage(AData: TMemoryStream; AWidth, AHeight: Word;
+		out ADest: TPNGImage);
 
 implementation
 
@@ -126,6 +128,111 @@ procedure DecodeRoomImage(AData: TMemoryStream; AWidth, AHeight: Word;
 	theX:= 0;
 	maxX:= AWidth;
 
+	while theX < maxX do
+		begin
+		ptr_dither_table:= @dither_table[0];
+
+		for theY:= 0 to AHeight - 1 do
+			begin
+			Dec(run);
+			if  run = 0 then
+				begin
+				data:= src^;
+				Inc(src);
+
+				if  (data and $80) <> 0 then
+					begin
+					run:= data and $7F;
+					dither:= True;
+					end
+				else
+					begin
+					run:= data shr 4;
+					dither:= False;
+					end;
+
+//				color:= AMIGA_PALETTE[data and $0F];
+				color:= data and $0F;
+				if  run = 0 then
+					begin
+					run:= src^;
+					Inc(src);
+					end;
+				end;
+
+			if not dither then
+				ptr_dither_table^:= color;
+
+			if  (0 <= theX)
+			and (theX < AWidth) then
+				begin
+				dst^:= ptr_dither_table^;
+				Inc(ptr_dither_table);
+				Inc(dst, AWidth);
+				end;
+			end;
+
+		if  (0 <= theX)
+		and (theX < AWidth) then
+			begin
+//			height * vs->pitch - 1 * vs->format.bytesPerPixel
+			Dec(dst, AHeight * AWidth - 1);
+			end;
+
+		Inc(theX);
+		end;
+
+	ADest:= TPNGImage.CreateBlank(COLOR_RGBALPHA, 8, AWidth, AHeight);
+
+	dst:= @dstTmp[0];
+	for theY:= 0 to AHeight - 1 do
+		for theX:= 0 to AWidth - 1 do
+			begin
+			Assert(dst^ < 16, 'pixel colour out of range');
+
+			ADest.Pixels[theX, theY]:= AMIGA_PALETTE[dst^];
+			ADest.AlphaScanline[theY]^[theX]:= $FF;
+
+			Inc(dst);
+			end;
+	end;
+
+procedure DecodeObjectImage(AData: TMemoryStream; AWidth, AHeight: Word;
+		out ADest: TPNGImage);
+	var
+	dstTmp: array of Byte;
+	dst: PByte;
+
+//	byte *mask_ptr;
+	src: PByte;
+	color,
+	data: Byte;
+	run: Integer;
+	dither: Boolean;
+	dither_table: array[0..127] of Byte;
+	ptr_dither_table: PByte;
+	theX,
+	theY,
+	maxX: Integer;
+//	dstX,
+//	dstY: Integer;
+
+	begin
+	Assert(AHeight <= 128, 'Height is ' + IntToStr(AHeight));
+
+	SetLength(dstTmp, AWidth * AHeight);
+	dst:= @dstTmp[0];
+
+//	data:= 0;
+	dither:= False;
+	FillChar(dither_table[0], SizeOf(dither_table), 0);
+
+	run:= 1;
+	color:= 0;
+	src:= PByte(AData.Memory) + AData.Position;
+	theX:= 0;
+	maxX:= AWidth;
+
 	while theX < maxX do
 		begin
 		ptr_dither_table:= @dither_table[0];

@@ -43,39 +43,14 @@ type
 implementation
 
 uses
-	TypInfo, SysUtils, VCL.Graphics, VCL.Imaging.PNGImage,
+	TypInfo, SysUtils, System.Generics.Collections, System.Generics.Defaults,
+	VCL.Graphics, VCL.Imaging.PNGImage,
 	SCUMMLogTypes, SPUTMStrs,
 	SPUTMPlatAmigaConsts, SPUTMPlatAmigaTypes,
 	SPUTMDecV2Consts, SPUTMDecV2Strs, SPUTMDecV2Types, FrameSPUTMDecV2Costume;
 
 
 {$I SCUMMEndianStreamWrapper.inc}
-
-
-procedure LoadFileToMemory(const AFileName: string; out AMem: TMemoryStream);
-	var
-	b: Byte;
-	f: TFileStream;
-
-	begin
-	AMem:= TMemoryStream.Create;
-
-	f:= TFileStream.Create(AFileName, fmOpenRead);
-	try
-		while not (f.Position = f.Size) do
-			begin
-//			f.Read(b, 1);
-//			b:= b xor $FF;
-			b:= READ_LE_UINT8(f, $FF);
-			AMem.Write(b, 1);
-			end;
-
-		finally
-		f.Free;
-		end;
-
-	AMem.Position:= 0;
-	end;
 
 
 function  SPUTMDecV2PlgQuery(const ACoreDesc: PSCUMMPluginDesc;
@@ -262,6 +237,7 @@ procedure DoDecodeRootCntnr(
 		begin
 		FillChar(AObjData^.gameStats, SizeOf(TSPUTMStats), 0);
 
+//      Not caching this because its only used here.
 		f:= TFileStream.Create(n.Objects[i], fmOpenRead);
 		try
 			m:= READ_LE_UINT16(f, ASelf.DetectData.encByte);
@@ -419,12 +395,134 @@ procedure DoDecodeRoomZPlanesCntnr(
 	begin
 	end;
 
+type
+	TObjCompare = class(TInterfacedObject, IComparer<PSCUMMObjectData>)
+	public
+		function Compare(const Left, Right: PSCUMMObjectData): Integer;
+	end;
+
+function TObjCompare.Compare(const Left, Right: PSCUMMObjectData): Integer;
+	begin
+	Result:= Left^.obj_nr - Right^.obj_nr;
+	end;
+
+
 procedure DoDecodeObjectsCntnr(
 		const ASelf: TSCUMMExpDecV2;
 		const AInfoPath: TSCUMMExpDecInfoPath;
 		const AIndex: Integer;
 		const AObjData: PSCUMMExpObjData);
+	var
+	i,
+	j,
+	k: Integer;
+	n: TSCUMMHostNode;
+	m: TMemoryStream;
+	l: TList<PSCUMMObjectData>;
+	s: string;
+	ptr,
+	optr: PByte;
+	ipos: Word;
+	cnt: Byte;
+	obj: PSCUMMObjectData;
+	srt: TObjCompare;
+	p: TSCUMMExpGlobIdArr;
+	g: TSCUMMExpGlobId;
+	r: TSCUMMExpObjData;
+
 	begin
+	l:= TList<PSCUMMObjectData>.Create;
+
+	k:= ASelf.FRootData^.gameStats._numRooms;
+	SCUMMExpProgressBegin(k + 4);
+	for i:= 1 to k do
+		begin
+		s:= 'Processing Room #' + IntToStr(i);
+		SCUMMExpProgressUpdate(s, i - 1);
+
+		if  ASelf.FHostNode.FindObjectInNodes(Format(ASelf.FDetectData.fp.pattern,
+				[i]), n, j) then
+			begin
+			m:= SCUMMFileCache.LoadOrRecallFile(n.Objects[j],
+					ASelf.DetectData.EncByte);
+
+			ptr:= m.Memory;
+
+			cnt:= (ptr + 20)^;
+			ipos:= 28;
+			ptr:= ptr + 28 + cnt * 2;
+
+			while cnt > 0 do
+				begin
+				New(obj);
+
+				obj^.resInfo.roomNo:= AIndex;
+				obj^.resInfo.OBCDoffset:= PWord(ptr)^;
+
+				optr:= PByte(m.Memory) + obj^.resInfo.OBCDoffset - 2;
+
+				obj^.resInfo.unk1:= PWord(optr)^;
+				obj^.resInfo.size:= PWord(optr + 2)^;
+				obj^.resInfo.unk2:= PWord(optr + 4)^;
+				obj^.obj_nr:= PWord(optr + 6)^;
+
+				obj^.x_pos:= (optr + 9)^;
+				obj^.parentstate:= (((optr + 10)^ and $80) shr 7) * 8;
+				obj^.y_pos:= (optr + 10)^ and $7F;
+				obj^.width:= (optr + 11)^ * 8;
+				obj^.parent:= (optr + 12)^;
+				obj^.walk_x:= (optr + 13)^ * 8;
+				obj^.walk_y:= ((optr + 14)^ and $1F) * 8;
+				obj^.height:= ((optr + 15)^ and $F8);
+				obj^.actorDir:= (optr + 15)^ and $07;
+
+				obj^.byte17:= (optr + 17)^;
+
+				m.Position:= PWord(PByte(m.Memory) + iPos)^;
+				DecodeObjectImage(m, obj^.width, obj^.height, obj^.img);
+
+				l.Add(obj);
+				Dec(cnt);
+				Inc(ptr, 2);
+				Inc(ipos, 2);
+				end;
+			end;
+
+		SCUMMExpProgressUpdate(s, i);
+		end;
+
+	SCUMMExpProgressUpdate('Sorting Objects...', k + 1);
+	srt:= TObjCompare.Create;
+	l.Sort(srt);
+	SCUMMExpProgressUpdate('Sorting Objects...', k + 2);
+
+	SCUMMExpProgressUpdate('Creating Object List...', k + 3);
+	SetLength(p, Length(AInfoPath) + 1);
+	for i:= 0 to High(AInfoPath) do
+		p[i]:= AInfoPath[i].id;
+
+	for i:= 0 to l.Count - 1 do
+		begin
+		g:= SCUMMExpCreateGlobID;
+		p[High(p)]:= g;
+
+		FillChar(r, SizeOf(TSCUMMExpObjData), 0);
+		r.id:= g;
+		r.name:= Format('Object %3.3d', [l[i]^.obj_nr]);
+		r.index:= i;
+		r.enumType:= sxeObjectCntnr;
+		r.decoded:= False;
+		r.dataType:= sxdRaw;
+		r.rawData:= l[i];
+
+		SCUMMExpEnumCache.SetDataForPath(p, r);
+		end;
+	SCUMMExpProgressUpdate('Creating Object List...', k + 4);
+
+	SCUMMExpProgressEnd;
+	l.Free;
+
+	AObjData^.decoded:= True;
 	end;
 
 procedure DoDecodeObjectCntnr(
@@ -433,6 +531,8 @@ procedure DoDecodeObjectCntnr(
 		const AIndex: Integer;
 		const AObjData: PSCUMMExpObjData);
 	begin
+//  Don't need to do anything here.
+	AObjData^.decoded:= True;
 	end;
 
 procedure DoDecodeScriptsCntnr(
@@ -546,7 +646,8 @@ procedure DoDecodeCostumeCntnr(
 		const AObjData: PSCUMMExpObjData);
 	var
 	c: PSCUMMCostumeV2;
-	f: TFileStream;
+//	f: TFileStream;
+	f: TMemoryStream;
 	m: TMemoryStream;
 	sz: Word;
 	d: Cardinal;
@@ -559,27 +660,29 @@ procedure DoDecodeCostumeCntnr(
 	if  ASelf.FHostNode.FindObjectInNodes(Format(ASelf.FDetectData.fp.pattern,
 			[ASelf.FResData[srtCostume, AObjData.index].roomNo]), n, j) then
 		begin
+		f:= SCUMMFileCache.LoadOrRecallFile(n.Objects[j], ASelf.DetectData.encByte);
 		m:= TMemoryStream.Create;
-		f:= TFileStream.Create(n.Objects[j], fmOpenRead);
-		try
+//		f:= TFileStream.Create(n.Objects[j], fmOpenRead);
+//		try
 			d:= 0;
 //			need to inject 4 bytes because they aren't there in v2
 			m.Write(d, 4);
 
 			f.Position:= ASelf.FResData[srtCostume, AObjData.index].roomOffs;
-			sz:= READ_LE_UINT16(f, ASelf.DetectData.encByte);
+			sz:= READ_LE_UINT16(f);
 
-//			This is a slow way to do it but have to decrypt...
+//			This is a slow way to do it?
+			m.SetSize(sz + 4);
 			f.Position:= ASelf.FResData[srtCostume, AObjData.index].roomOffs;
 			for i:= 0 to sz - 1 do
 				begin
-				b:= READ_LE_UINT8(f, ASelf.DetectData.encByte);
+				b:= READ_LE_UINT8(f);
 				m.Write(b, 1);
 				end;
 
-			finally
-			f.Free;
-			end;
+//			finally
+//			f.Free;
+//			end;
 
 		c:= New(PSCUMMCostumeV2);
 		m.Position:= 0;
@@ -933,7 +1036,8 @@ procedure DoDecodeRoomBackground(
 		if  ASelf.FHostNode.FindObjectInNodes(Format(ASelf.FDetectData.fp.pattern,
 				[d^.index]), n, j) then
 			begin
-			LoadFileToMemory(n.Objects[j], m);
+			m:= SCUMMFileCache.LoadOrRecallFile(n.Objects[j],
+					ASelf.DetectData.encByte);
 			try
 				w:= PWord(PByte(m.Memory) + 4)^;
 				h:= PWord(PByte(m.Memory) + 6)^;
@@ -971,7 +1075,22 @@ procedure DoDecodeObjectBackground(
 		const AInfoPath: TSCUMMExpDecInfoPath;
 		const AIndex: Integer;
 		const AObjData: PSCUMMExpObjData);
+	var
+	i: Integer;
+	p: TSCUMMExpGlobIdArr;
+	d: PSCUMMExpObjData;
+
 	begin
+//	Get the object data
+	SetLength(p, Length(AInfoPath) - 1);
+	for i:= 0 to High(AInfoPath) - 1 do
+		p[i]:= AInfoPath[i].id;
+	d:= SCUMMExpEnumCache.GetDataForPath(p);
+
+	Assert(d^.enumType = sxeObjectCntnr);
+
+	AObjData^.imageData:= PSCUMMObjectData(d^.rawData)^.img;
+	AObjData^.decoded:= True;
 	end;
 
 procedure DoDecodeObjectImage(
@@ -980,6 +1099,7 @@ procedure DoDecodeObjectImage(
 		const AIndex: Integer;
 		const AObjData: PSCUMMExpObjData);
 	begin
+//  There is only a background image for V2 objects.
 	end;
 
 procedure DoDecodeObjectProps(

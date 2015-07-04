@@ -42,6 +42,7 @@ uses
 procedure SCUMMExpInitialise;
 	begin
 	SCUMMPluginMngr:= TSCUMMPluginMngr.Create(Application.ExeName);
+	SCUMMFileCache:= TSCUMMFileCache.Create;
 
 	SCUMMKnowledgeBase:= TSCUMMKnowledgeBase.Create;
 	SCUMMKnowledgeBase.AddSection(TSCUMMKBFilenamePatterns);

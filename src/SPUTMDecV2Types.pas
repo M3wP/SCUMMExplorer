@@ -3,7 +3,7 @@ unit SPUTMDecV2Types;
 interface
 
 uses
-	Classes;
+	Classes, PNGImage;
 
 type
 	TSCUMMCostResInfoV2 = record
@@ -92,6 +92,39 @@ type
 
 		procedure Clear;
 		procedure LoadFromStream(AStream: TStream);
+	end;
+
+	TSCUMMObjResource = record
+		roomNo: Byte;
+		OBIMoffset: Word;
+		OBCDoffset: Word;
+
+		unk1: Word;
+		size: Word;
+		unk2: Word;
+	end;
+
+	PSCUMMObjectData = ^TSCUMMObjectData;
+	TSCUMMObjectData = record
+		resInfo: TSCUMMObjResource;
+		obj_nr: Word;
+		walk_x,
+		walk_y: Word;
+		x_pos,
+		y_pos: SmallInt;
+		width,
+		height: Word;
+		actorDir: Byte;
+		parent: Byte;
+		parentstate: Byte;
+
+		byte17: Byte;
+
+		state: Byte;
+		fl_object_index: Byte;
+		flags: Byte;
+
+		img: TPNGImage;
 	end;
 
 implementation

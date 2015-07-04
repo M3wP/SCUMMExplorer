@@ -41,7 +41,7 @@ object SCUMMExpSplashForm: TSCUMMExpSplashForm
     Alignment = taCenter
     AutoSize = False
   end
-  object Label2: TLabel
+  object lblDetail: TLabel
     Left = 8
     Top = 60
     Width = 333

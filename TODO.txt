@@ -1,12 +1,14 @@
-03JUL2015
+04JUL2015
+
+
 
 These are pretty immediate necessities.
 
-- Implement a file cache for loading files and storing TMemoryStreams
-- Implement progress feedback for decoding
 - Implement DOS version handling
 - Finish script decompiler
 - More resource types!
+- Icons
+- Get 64bit Windows Platform to work (why doesn't it??)
 
 
 

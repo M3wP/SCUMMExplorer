@@ -34,6 +34,8 @@ const
 //	This tells us which cacheable types are data ("file") ones
 	SET_SCUMMEXP_ENMTYP_DATATYPE: set of TSCUMMExpEnumType = [sxeUnknown, sxeRoomScript..High(TSCUMMExpEnumType)];
 
+	LIT_SCUMMEXP_PROGRS_DEFDETAL = 'Decoding';
+
 
 implementation
 

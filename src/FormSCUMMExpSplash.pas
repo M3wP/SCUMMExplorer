@@ -12,7 +12,7 @@ type
 		prgbrProgress: TProgressBar;
 		Label1: TLabel;
 		lblProgress: TLabel;
-    Label2: TLabel;
+		lblDetail: TLabel;
 	private
 		{ Private declarations }
 	public

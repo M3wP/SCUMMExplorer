@@ -8,7 +8,6 @@ uses
   FormSCUMMExpLog in '..\src\FormSCUMMExpLog.pas' {SCUMMExpLogForm},
   DModSCUMMExpMain in '..\src\DModSCUMMExpMain.pas' {SCUMMExpMainDMod: TDataModule},
   FrameSCUMMExpMain in '..\src\FrameSCUMMExpMain.pas' {SCUMMExpMainFrame: TFrame},
-  FormSCUMMExpSplash in '..\src\FormSCUMMExpSplash.pas' {SCUMMExpSplashForm},
   SCUMMExpStrs in '..\src\SCUMMExpStrs.pas',
   SCUMMExpClasses in '..\src\SCUMMExpClasses.pas',
   FormSCUMMExpAbout in '..\src\FormSCUMMExpAbout.pas' {SCUMMExpAboutForm};

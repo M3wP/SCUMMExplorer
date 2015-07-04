@@ -128,6 +128,7 @@ function TSCUMMExpMainDMod.GetMainFrame: TSCUMMExpMainFrame;
 	end;
 
 procedure TSCUMMExpMainDMod.Prepare;
+{$IFDEF DEBUG}
 	procedure PerformTest;
 		var
 //		s: string;
@@ -176,6 +177,7 @@ procedure TSCUMMExpMainDMod.Prepare;
 
 		SCUMMExpLogAbort(sxkExplorer, 'Internal testing complete.', []);
 		end;
+{$ENDIF}
 
 	var
 	sf: TSCUMMExpSplashForm;
@@ -247,7 +249,9 @@ procedure TSCUMMExpMainDMod.Prepare;
 		sf.Release;
 		end;
 
+{$IFDEF DEBUG}
 	PerformTest;
+{$ENDIF}
 
 	SCUMMExpLogInform(sxkExplorer, STR_SCUMMEXP_INIMSG_EXPREADY, []);
 	Application.MainForm.BringToFront;

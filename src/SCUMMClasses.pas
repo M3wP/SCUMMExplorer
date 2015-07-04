@@ -65,6 +65,19 @@ type
 	end;
 
 
+	TSCUMMFileCache = class
+	private
+		FCache: TDictionary<string, TMemoryStream>;
+
+	public
+		constructor Create;
+		destructor  Destroy; override;
+
+		function  LoadOrRecallFile(const AFileName: string;
+				const AEncByte: Byte = $00): TMemoryStream;
+	end;
+
+
 //	SCUMMVM implements these as static const arrays in detection_tables.h and
 //		scumm-md5.h but we won't be doing that here (to allow extension and a
 //		simpler growth pattern from data conversion).  So instead, we have a
@@ -240,6 +253,7 @@ type
 
 var
 	SCUMMPluginMngr: TSCUMMPluginMngr;
+	SCUMMFileCache: TSCUMMFileCache;
 
 
 implementation
@@ -1761,6 +1775,8 @@ procedure TSCUMMKBGameVariants.WriteEntryToString(const AIndex: Integer;
 			GetEnumName(FTypePlatform, Ord(p^.plat)) + #$09 +
 			MakeStringField(string(SetToString64(FTypeGUIOpt, h.int64, True))) + #$0D#$0A;
 	end;
+
+
 { TSCUMMPluginMngr }
 
 procedure TSCUMMPluginMngr.Clear;
@@ -2027,6 +2043,65 @@ procedure TSCUMMPluginMngr.Remove(AIndex: Integer);
 	d:= FPlugins[AIndex];
 	Dispose(d);
 	FPlugins.Delete(AIndex);
+	end;
+
+{ TSCUMMFileCache }
+
+constructor TSCUMMFileCache.Create;
+	begin
+	Assert(not Assigned(SCUMMFileCache));
+
+	inherited Create;
+
+	FCache:= TDictionary<string, TMemoryStream>.Create;
+
+	SCUMMFileCache:= Self;
+	end;
+
+destructor TSCUMMFileCache.Destroy;
+	begin
+//FIXME Release memory allocated.
+
+	FCache.Free;
+
+	inherited;
+	end;
+
+function TSCUMMFileCache.LoadOrRecallFile(const AFileName: string;
+		const AEncByte: Byte): TMemoryStream;
+	var
+	f: TFileStream;
+	b: Byte;
+
+	begin
+	if  not FCache.TryGetValue(AFileName, Result) then
+		begin
+		Result:= TMemoryStream.Create;
+
+		f:= TFileStream.Create(AFileName, fmOpenRead);
+		try
+			if  AEncByte = $00 then
+				Result.LoadFromStream(f)
+			else
+				begin
+				Result.SetSize(f.Size);
+
+				while f.Position < f.Size do
+					begin
+					f.Read(b, 1);
+					b:= b xor AEncByte;
+					Result.Write(b, 1);
+					end;
+				end;
+
+			finally
+			f.Free;
+			end;
+
+		FCache.Add(AFileName, Result);
+		end;
+
+	Result.Position:= 0;
 	end;
 
 end.
