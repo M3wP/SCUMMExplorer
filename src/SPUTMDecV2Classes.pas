@@ -1038,19 +1038,15 @@ procedure DoDecodeRoomBackground(
 			begin
 			m:= SCUMMFileCache.LoadOrRecallFile(n.Objects[j],
 					ASelf.DetectData.encByte);
-			try
-				w:= PWord(PByte(m.Memory) + 4)^;
-				h:= PWord(PByte(m.Memory) + 6)^;
 
-				iPos:= PWord(PByte(m.Memory) + 10)^;
-				m.Position:= ipos;
+			w:= PWord(PByte(m.Memory) + 4)^;
+			h:= PWord(PByte(m.Memory) + 6)^;
 
-				DecodeRoomImage(m, w, h, AObjData^.imageData);
-				AObjData^.decoded:= True;
+			iPos:= PWord(PByte(m.Memory) + 10)^;
+			m.Position:= ipos;
 
-				finally
-				m.Free;
-				end;
+			DecodeRoomImage(m, w, h, AObjData^.imageData);
+			AObjData^.decoded:= True;
 			end;
 	end;
 
