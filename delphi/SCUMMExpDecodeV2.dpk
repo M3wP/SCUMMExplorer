@@ -35,7 +35,8 @@ requires
   SCUMMExpKB,
   SCUMMExpLog,
   SCUMMExpPlatAmiga,
-  SCUMMExpScriptDecomp;
+  SCUMMExpScriptDecomp,
+  SCUMMExpPlatPCDOS;
 
 contains
   SPUTMDecV2Classes in '..\src\SPUTMDecV2Classes.pas',

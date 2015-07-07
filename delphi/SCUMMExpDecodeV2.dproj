@@ -123,6 +123,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="SCUMMExpLog.dcp"/>
         <DCCReference Include="SCUMMExpPlatAmiga.dcp"/>
         <DCCReference Include="SCUMMExpScriptDecomp.dcp"/>
+        <DCCReference Include="SCUMMExpPlatPCDOS.dcp"/>
         <DCCReference Include="..\src\SPUTMDecV2Classes.pas"/>
         <DCCReference Include="..\src\SPUTMDecV2Consts.pas"/>
         <DCCReference Include="..\src\SPUTMDecV2Strs.pas"/>

@@ -18,6 +18,9 @@
         <Projects Include="SCUMMExpPlatAmiga.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="SCUMMExpPlatPCDOS.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="SCUMMExpDecodeV2.dproj">
             <Dependencies>SCUMMExpLog.dproj;SCUMMExpKB.dproj;SCUMMExpCore.dproj;SCUMMExpScriptDecomp.dproj;SCUMMExpPlatAmiga.dproj</Dependencies>
         </Projects>
@@ -77,6 +80,15 @@
     <Target Name="SCUMMExpPlatAmiga:Make">
         <MSBuild Projects="SCUMMExpPlatAmiga.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SCUMMExpPlatPCDOS">
+        <MSBuild Projects="SCUMMExpPlatPCDOS.dproj"/>
+    </Target>
+    <Target Name="SCUMMExpPlatPCDOS:Clean">
+        <MSBuild Projects="SCUMMExpPlatPCDOS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SCUMMExpPlatPCDOS:Make">
+        <MSBuild Projects="SCUMMExpPlatPCDOS.dproj" Targets="Make"/>
+    </Target>
     <Target Name="SCUMMExpDecodeV2" DependsOnTargets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpScriptDecomp;SCUMMExpPlatAmiga">
         <MSBuild Projects="SCUMMExpDecodeV2.dproj"/>
     </Target>
@@ -96,13 +108,13 @@
         <MSBuild Projects="SCUMMExplorer.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpScriptDecomp;SCUMMExpPlatAmiga;SCUMMExpDecodeV2;SCUMMExplorer"/>
+        <CallTarget Targets="SCUMMExpLog;SCUMMExpKB;SCUMMExpCore;SCUMMExpScriptDecomp;SCUMMExpPlatAmiga;SCUMMExpPlatPCDOS;SCUMMExpDecodeV2;SCUMMExplorer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SCUMMExpLog:Clean;SCUMMExpKB:Clean;SCUMMExpCore:Clean;SCUMMExpScriptDecomp:Clean;SCUMMExpPlatAmiga:Clean;SCUMMExpDecodeV2:Clean;SCUMMExplorer:Clean"/>
+        <CallTarget Targets="SCUMMExpLog:Clean;SCUMMExpKB:Clean;SCUMMExpCore:Clean;SCUMMExpScriptDecomp:Clean;SCUMMExpPlatAmiga:Clean;SCUMMExpPlatPCDOS:Clean;SCUMMExpDecodeV2:Clean;SCUMMExplorer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SCUMMExpLog:Make;SCUMMExpKB:Make;SCUMMExpCore:Make;SCUMMExpScriptDecomp:Make;SCUMMExpPlatAmiga:Make;SCUMMExpDecodeV2:Make;SCUMMExplorer:Make"/>
+        <CallTarget Targets="SCUMMExpLog:Make;SCUMMExpKB:Make;SCUMMExpCore:Make;SCUMMExpScriptDecomp:Make;SCUMMExpPlatAmiga:Make;SCUMMExpPlatPCDOS:Make;SCUMMExpDecodeV2:Make;SCUMMExplorer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
