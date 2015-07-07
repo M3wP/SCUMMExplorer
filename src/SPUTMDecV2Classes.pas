@@ -46,7 +46,7 @@ uses
 	TypInfo, SysUtils, System.Generics.Collections, System.Generics.Defaults,
 	VCL.Graphics, VCL.Imaging.PNGImage,
 	SCUMMLogTypes, SPUTMStrs,
-	SPUTMPlatAmigaConsts, SPUTMPlatAmigaTypes,
+	SPUTMPlatAmigaConsts, SPUTMPlatPCDOSConsts,
 	SPUTMDecV2Consts, SPUTMDecV2Strs, SPUTMDecV2Types, FrameSPUTMDecV2Costume;
 
 
@@ -479,7 +479,13 @@ procedure DoDecodeObjectsCntnr(
 				obj^.byte17:= (optr + 17)^;
 
 				m.Position:= PWord(PByte(m.Memory) + iPos)^;
-				DecodeObjectImage(m, obj^.width, obj^.height, obj^.img);
+
+				if  ASelf.FDetectData.game.plat = scpPCDOS then
+					DecodeObjectImage(m, obj^.width, obj^.height, ARR_PLTFRM_PCDOS_IMGPAL,
+							obj^.img)
+				else
+					DecodeObjectImage(m, obj^.width, obj^.height, ARR_PLTFRM_AMIGA_IMGPAL,
+							obj^.img);
 
 				l.Add(obj);
 				Dec(cnt);
@@ -1045,7 +1051,11 @@ procedure DoDecodeRoomBackground(
 			iPos:= PWord(PByte(m.Memory) + 10)^;
 			m.Position:= ipos;
 
-			DecodeRoomImage(m, w, h, AObjData^.imageData);
+			if  ASelf.FDetectData.game.plat = scpPCDOS then
+				DecodeRoomImage(m, w, h, ARR_PLTFRM_PCDOS_IMGPAL, AObjData^.imageData)
+			else
+				DecodeRoomImage(m, w, h, ARR_PLTFRM_AMIGA_IMGPAL, AObjData^.imageData);
+
 			AObjData^.decoded:= True;
 			end;
 	end;
@@ -1199,8 +1209,13 @@ procedure DoDecodeFrameImage(
 		c^.frameInfos[d^.index].DecodeProcV2(c^.resInfo.colour, m);
 
 		m.Position:= 0;
-		DrawCostumeFrame(m, c^.frameInfos[d^.index].width,
-				c^.frameInfos[d^.index].height, False, g);
+
+		if  ASelf.FDetectData.game.plat = scpPCDOS then
+			DecodeCostumeFrame(m, c^.frameInfos[d^.index].width,
+					c^.frameInfos[d^.index].height, False, ARR_PLTFRM_PCDOS_CSTPAL, g)
+		else
+			DecodeCostumeFrame(m, c^.frameInfos[d^.index].width,
+					c^.frameInfos[d^.index].height, False, ARR_PLTFRM_AMIGA_CSTPAL, g);
 		finally
 		m.Free;
 		end;
@@ -1723,6 +1738,19 @@ function TSCUMMExpDecV2.GetGameDesc: string;
 		Result:= STR_SCUMMEXP_DECDDS_ZKMCK
 	else
 		Result:= STR_SCUMMEXP_DECDDS_OTHER;
+
+	Result:= Result + ' (';
+
+	case FDetectData.game.plat of
+		scpPCDOS:
+			Result:= Result + LIT_PLTFRM_PCDOS_DESCRP;
+		scpAmiga:
+			Result:= Result + LIT_PLTFRM_AMIGA_DESCRP;
+		else
+			Result:= Result + STR_SCUMMEXP_DECDDS_OTHER;
+		end;
+
+	Result:= Result + ')';
 	end;
 
 class function TSCUMMExpDecV2.GetName: string;

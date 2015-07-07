@@ -160,7 +160,6 @@ procedure TSCUMMExpMainFrame.ListView1SelectItem(Sender: TObject;
 			if  d^.decoded then
 				begin
 //TODO dengland Implement custom preview frames.
-				f:= nil;
 				hn:= SCUMMExpGames.GameHostNode[s[0]];
 				dd:= SCUMMExpGames.GameDetectData[s[0]];
 				f:= SCUMMExpViewerReflector.GetViewerForPath(hn, dd, s);

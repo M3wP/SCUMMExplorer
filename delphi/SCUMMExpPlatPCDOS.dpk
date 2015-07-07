@@ -1,4 +1,4 @@
-package SCUMMExpPlatAmiga;
+package SCUMMExpPlatPCDOS;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -32,7 +32,6 @@ requires
   vcl;
 
 contains
-  SPUTMPlatAmigaConsts in '..\src\SPUTMPlatAmigaConsts.pas',
-  SPUTMPlatAmigaTypes in '..\src\SPUTMPlatAmigaTypes.pas';
+  SPUTMPlatPCDOSConsts in '..\src\SPUTMPlatPCDOSConsts.pas';
 
 end.

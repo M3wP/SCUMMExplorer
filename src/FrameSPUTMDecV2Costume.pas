@@ -96,6 +96,7 @@ type
 		FState: array[9..14] of TCheckBox;
 		FDrawBuf: TBitmap;
 		FMirror: Boolean;
+		FDetectData: TSCUMMDetectorData;
 
 		procedure IncludeAnimation(var AAnimations: TSCUMMCostAnimations;
 				AAnim: Integer; ACells: Byte; const AMerge: Boolean = True);
@@ -141,7 +142,7 @@ implementation
 {$R *.dfm}
 
 uses
-	Math, SPUTMDecV2Strs, SPUTMPlatAmigaTypes, SPUTMClasses;
+	Math, SPUTMDecV2Strs, SPUTMPlatAmigaConsts, SPUTMPlatPCDOSConsts, SPUTMClasses;
 
 
 procedure DrawPngWithAlpha(Src, Dest: TPNGImage; const R: TRect);
@@ -180,7 +181,8 @@ procedure BitmapDrawFunc(ACell: TPNGImage; ADest: Pointer; ARect: TRect);
 
 procedure DrawCellToFrame(ACostume: PSCUMMCostumeV2;
 		AAnims: TSCUMMCostAnimations; AMirror: Boolean; AStream: TMemoryStream;
-		AAnim: Byte; APoint: TPoint; AFunc: TCellDrawFunc; AData: Pointer);
+		AAnim: Byte; APoint: TPoint; AFunc: TCellDrawFunc; AData: Pointer;
+		APlatform: TSCUMMCorePlatform);
 	var
 	p: TPoint;
 	v,
@@ -219,8 +221,16 @@ procedure DrawCellToFrame(ACostume: PSCUMMCostumeV2;
 				AStream);
 
 		AStream.Seek(0, soFromBeginning);
-		DrawCostumeFrame(AStream, ACostume^.frameInfos[q].width,
-				ACostume^.frameInfos[q].height, AMirror, cell);
+
+		if  APlatform = scpPCDOS then
+			DecodeCostumeFrame(AStream, ACostume^.frameInfos[q].width,
+					ACostume^.frameInfos[q].height, AMirror, ARR_PLTFRM_PCDOS_CSTPAL,
+					cell)
+		else
+			DecodeCostumeFrame(AStream, ACostume^.frameInfos[q].width,
+					ACostume^.frameInfos[q].height, AMirror, ARR_PLTFRM_AMIGA_CSTPAL,
+					cell);
+
 		try
 // 			cell.DrawUsingPixelInformation(frame.Canvas, p);
 //			DrawPngWithAlpha(cell, AFrame, Rect(p.X, p.Y,
@@ -498,7 +508,7 @@ procedure TSPUTMDecV2CostumeFrame.PrepareFrame(AAnims: TSCUMMCostAnimations;
 	begin
 	for i:= High(AAnims) downto Low(AAnims) do
 		DrawCellToFrame(FCostume, AAnims, AMirror, FMemStream, i, APoint,
-				BitmapDrawFunc, AFrame);
+				BitmapDrawFunc, AFrame, FDetectData.game.plat);
 	end;
 
 procedure TSPUTMDecV2CostumeFrame.PrepareFrame(AAnims: TSCUMMCostAnimations;
@@ -509,7 +519,7 @@ procedure TSPUTMDecV2CostumeFrame.PrepareFrame(AAnims: TSCUMMCostAnimations;
 	begin
 	for i:= High(AAnims) downto Low(AAnims) do
 		DrawCellToFrame(FCostume, AAnims, AMirror, FMemStream, i, APoint,
-				PNGDrawFunc, AFrame);
+				PNGDrawFunc, AFrame, FDetectData.game.plat);
 	end;
 
 procedure TSPUTMDecV2CostumeFrame.PrepareInformation;
@@ -541,6 +551,8 @@ procedure TSPUTMDecV2CostumeFrame.PreviewPath(AHostNode: TSCUMMHostNode;
 	d: PSCUMMExpObjData;
 
 	begin
+	FDetectData:= ADetectData;
+
 //TODO This is for first time create.  Eventually, these viewer frames should be
 //      pooled so this code would need to be run only the first time - in init.
 	TrackBar8Change(Self);

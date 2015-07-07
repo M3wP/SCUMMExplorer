@@ -1,81 +1,71 @@
 object SPUTMDecV2CostumeFrame: TSPUTMDecV2CostumeFrame
   Left = 0
   Top = 0
-  Width = 634
-  Height = 503
-  DoubleBuffered = True
+  Height = 437
+  Width = 593
   Color = clBtnFace
-  ParentBackground = False
-  ParentColor = False
-  ParentDoubleBuffered = False
-  TabOrder = 0
+  DoubleBuffered = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   object Panel2: TPanel
-    Left = 312
+    Left = 271
     Top = 0
     Width = 322
-    Height = 503
+    Height = 437
     Align = alRight
     FullRepaint = False
     ParentBackground = False
     TabOrder = 0
-    ExplicitLeft = 301
-    DesignSize = (
-      322
-      503)
     object Label2: TLabel
       Left = 6
-      Top = 276
-      Width = 34
+      Top = 269
+      Width = 36
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 9:'
     end
     object Label3: TLabel
       Left = 6
-      Top = 304
-      Width = 40
+      Top = 297
+      Width = 42
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 10:'
     end
     object Label4: TLabel
       Left = 6
-      Top = 332
-      Width = 40
+      Top = 325
+      Width = 42
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 11:'
     end
     object Label5: TLabel
       Left = 6
-      Top = 360
-      Width = 40
+      Top = 353
+      Width = 42
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 12:'
     end
     object Label6: TLabel
       Left = 6
-      Top = 388
-      Width = 40
+      Top = 381
+      Width = 42
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 13:'
     end
     object Label7: TLabel
       Left = 6
-      Top = 416
-      Width = 40
+      Top = 409
+      Width = 42
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 14:'
     end
     object Label1: TLabel
       Left = 6
-      Top = 254
-      Width = 106
+      Top = 247
+      Width = 114
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'Animation Sequences:'
     end
     object PaintBox1: TPaintBox
@@ -87,137 +77,125 @@ object SPUTMDecV2CostumeFrame: TSPUTMDecV2CostumeFrame
       Color = clBtnFace
       ParentColor = False
       OnPaint = PaintBox1Paint
+      ExplicitTop = 3
     end
     object Label12: TLabel
       Left = 6
-      Top = 457
-      Width = 30
+      Top = 450
+      Width = 29
       Height = 13
-      Anchors = [akLeft, akBottom]
       Caption = 'State:'
     end
     object TrackBar2: TTrackBar
       Left = 57
-      Top = 273
+      Top = 266
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 0
     end
     object TrackBar1: TTrackBar
       Left = 57
-      Top = 301
+      Top = 294
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 5
     end
     object CheckBox9: TCheckBox
       Left = 82
-      Top = 456
+      Top = 449
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 9'
       Enabled = False
       TabOrder = 6
     end
     object CheckBox10: TCheckBox
       Left = 82
-      Top = 479
+      Top = 472
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 10'
       Enabled = False
       TabOrder = 7
     end
     object CheckBox11: TCheckBox
       Left = 164
-      Top = 456
+      Top = 449
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 11'
       Enabled = False
       TabOrder = 8
     end
     object CheckBox12: TCheckBox
       Left = 164
-      Top = 479
+      Top = 472
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 12'
       Enabled = False
       TabOrder = 9
     end
     object CheckBox13: TCheckBox
       Left = 248
-      Top = 456
+      Top = 449
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 13'
       Enabled = False
       TabOrder = 10
     end
     object CheckBox14: TCheckBox
       Left = 248
-      Top = 479
+      Top = 472
       Width = 69
       Height = 17
       AllowGrayed = True
-      Anchors = [akLeft, akBottom]
       Caption = 'Limb 14'
       Enabled = False
       TabOrder = 11
     end
     object TrackBar3: TTrackBar
       Left = 57
-      Top = 329
+      Top = 322
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 1
     end
     object TrackBar4: TTrackBar
       Left = 57
-      Top = 357
+      Top = 350
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 2
     end
     object TrackBar5: TTrackBar
       Left = 57
-      Top = 385
+      Top = 378
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 3
     end
     object TrackBar6: TTrackBar
       Left = 57
-      Top = 413
+      Top = 406
       Width = 265
       Height = 33
-      Anchors = [akLeft, akBottom]
       Enabled = False
       ShowSelRange = False
       TabOrder = 4
@@ -226,37 +204,36 @@ object SPUTMDecV2CostumeFrame: TSPUTMDecV2CostumeFrame
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 312
-    Height = 503
+    Width = 271
+    Height = 437
     Align = alClient
+    ParentBackground = False
     TabOrder = 1
-    ExplicitLeft = -5
-    ExplicitTop = 3
     object Label10: TLabel
       Left = 8
       Top = 409
-      Width = 34
+      Width = 35
       Height = 13
       Caption = 'Speed:'
     end
     object Label11: TLabel
       Left = 8
       Top = 305
-      Width = 67
+      Width = 74
       Height = 13
       Caption = 'Utilised Limbs:'
     end
     object Label8: TLabel
       Left = 8
       Top = 6
-      Width = 60
+      Width = 64
       Height = 13
       Caption = 'Information:'
     end
     object Label14: TLabel
       Left = 196
       Top = 305
-      Width = 51
+      Width = 57
       Height = 13
       Caption = 'Additional:'
     end
@@ -382,7 +359,7 @@ object SPUTMDecV2CostumeFrame: TSPUTMDecV2CostumeFrame
       object Label13: TLabel
         Left = 16
         Top = 116
-        Width = 34
+        Width = 38
         Height = 13
         Caption = 'Mouth:'
       end
